@@ -6,7 +6,8 @@
 /out-tsc
 /bazel-out
 
-/server/node_modules
+# Node
+/node_modules
 npm-debug.log
 yarn-error.log
 
@@ -26,6 +27,15 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
 
 # System files
 .DS_Store
