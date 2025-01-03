@@ -1,0 +1,19 @@
+{
+  "name": "mock-server",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "4.17.21",
+    "@types/node": "22.10.5",
+    "vite": "5.1.8",
+    "vite-plugin-node": "4.0.0"
+  },
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.21.2"
+  }
+}
