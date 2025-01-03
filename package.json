@@ -5,12 +5,14 @@
   "scripts": {
     "preinstall": "cd server && npm install && cd ../client && npm install",
     "start": "concurrently \"cd server && npm run dev\" \"cd client && npm run start\"",
-    "test": "cd client && npm test"
+    "test": "cd client && npm test",
+    "prepare": "husky"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "8.0.1"
+    "concurrently": "8.0.1",
+    "husky": "^9.1.7"
   },
   "volta": {
     "node": "22.12.0"
