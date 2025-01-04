@@ -1,0 +1,21 @@
+@use "@angular/material" as mat;
+@use "./theme-colors" as colors;
+
+:root {
+  --primary-color: #1a2242;
+  --secondary-color: #f87b1f;
+}
+
+$theme: (
+  color: (
+    primary: colors.$eob-primary-palette,
+    tertiary: colors.$eob-secondary-palette,
+    theme-type: light,
+  ),
+  typography: Roboto,
+  density: 0,
+);
+
+:root {
+  @include mat.theme($theme);
+}
