@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'eob-root',
-  imports: [MatSlideToggleModule],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
