@@ -22,4 +22,13 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'page-not-found',
+    title: 'Page Not Found',
+    loadComponent: () =>
+      import(
+        './layout/components/page-not-found-page/page-not-found-page.component'
+      ).then((m) => m.PageNotFoundPageComponent),
+  },
+  { path: '**', redirectTo: 'page-not-found' },
 ];
