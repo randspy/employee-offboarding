@@ -10,12 +10,12 @@ app.get('/', (_, res) => {
   res.send('Mock Server');
 });
 
-app.get('/employees', async (_, res) => {
+app.get('/api/employees', async (_, res) => {
   await sleep();
   res.send(employees);
 });
 
-app.get('/employees/:id', async (req, res) => {
+app.get('/api/employees/:id', async (req, res) => {
   await sleep();
   const employee = employees.find((e) => e.id === req.params.id);
   if (!employee) {
