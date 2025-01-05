@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { employees } from './employees';
+import { sleep } from './sleep';
 
 const app = express();
 app.use(cors());
@@ -9,11 +10,13 @@ app.get('/', (_, res) => {
   res.send('Mock Server');
 });
 
-app.get('/employees', function (_, res) {
+app.get('/employees', async (_, res) => {
+  await sleep();
   res.send(employees);
 });
 
-app.get('/employees/:id', function (req, res) {
+app.get('/employees/:id', async (req, res) => {
+  await sleep();
   const employee = employees.find((e) => e.id === req.params.id);
   if (!employee) {
     res.status(404).send('Employee not found');
