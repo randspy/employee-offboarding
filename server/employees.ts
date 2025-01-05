@@ -89,7 +89,7 @@ export const employees = [
     id: 'vvv1329',
     name: 'Robert Brown',
     department: 'Finance',
-    status: 'INACTIVE',
+    status: 'OFFBOARDED',
     email: 'rbrown@company.com',
     equipments: [
       {

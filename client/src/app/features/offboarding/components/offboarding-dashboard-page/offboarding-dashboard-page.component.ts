@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  effect,
+  inject,
+} from '@angular/core';
+import { EmployeesStore } from '../../stores/employees.store';
 
 @Component({
   selector: 'eob-offboarding-dashboard-page',
@@ -7,4 +14,19 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './offboarding-dashboard-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OffboardingDashboardPageComponent {}
+export class OffboardingDashboardPageComponent implements OnInit {
+  #employeesStore = inject(EmployeesStore);
+
+  employees = this.#employeesStore.employees;
+
+  constructor() {
+    // TODO: remove this temporary effect
+    effect(() => {
+      console.log(this.#employeesStore.employees());
+    });
+  }
+
+  ngOnInit() {
+    this.#employeesStore.loadEmployees();
+  }
+}

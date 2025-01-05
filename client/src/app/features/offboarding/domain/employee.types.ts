@@ -7,7 +7,7 @@ export interface Employee {
   id: string;
   name: string;
   department: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  status: 'ACTIVE' | 'OFFBOARDED';
   email: string;
   equipments: Equipment[];
 }
