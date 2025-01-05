@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { OffboardingPageComponent } from './components/offboarding-page/offboarding-page.component';
-import { OffboardEmployeePageComponent } from './components/offboard-employee-page/offboard-employee-page.component';
+import { OffboardingEmployeeDetailPageComponent } from './components/offboarding-employee-detail-page/offboarding-employee-detail-page.component';
+import { OffboardingDashboardPageComponent } from './components/offboarding-dashboard-page/offboarding-dashboard-page.component';
 
 export const offboardingRoutes: Routes = [
   {
@@ -8,11 +8,11 @@ export const offboardingRoutes: Routes = [
     children: [
       {
         path: '',
-        component: OffboardingPageComponent,
+        component: OffboardingDashboardPageComponent,
       },
       {
         path: ':id',
-        component: OffboardEmployeePageComponent,
+        component: OffboardingEmployeeDetailPageComponent,
       },
     ],
   },
