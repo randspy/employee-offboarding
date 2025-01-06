@@ -13,6 +13,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Employee } from '../../domain/employee.types';
 import { EmployeesStore } from '../../stores/employees.store';
 import { FormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'eob-offboarding-dashboard-page',
@@ -21,6 +22,7 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
+    MatProgressSpinnerModule,
     OffboardingEmployeeListComponent,
   ],
   templateUrl: './offboarding-dashboard-page.component.html',
@@ -29,6 +31,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class OffboardingDashboardPageComponent implements OnInit {
   #employeesStore = inject(EmployeesStore);
+
+  isLoading = this.#employeesStore.isLoading;
+  isError = this.#employeesStore.isError;
+  error = this.#employeesStore.error;
 
   filter = signal('');
 

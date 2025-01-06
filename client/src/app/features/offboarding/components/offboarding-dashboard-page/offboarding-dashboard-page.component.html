@@ -6,5 +6,12 @@
       <input matInput type="text" [(ngModel)]="filter" placeholder="Filter" />
     </mat-form-field>
   </div>
-  <eob-offboarding-employee-list [employees]="filteredEmployees()" />
+
+  @if (isLoading()) {
+    <p>Loading...</p>
+  } @else if (isError()) {
+    <p>Error: {{ error() }}</p>
+  } @else {
+    <eob-offboarding-employee-list [employees]="filteredEmployees()" />
+  }
 </div>

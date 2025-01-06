@@ -2,8 +2,10 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { EmployeesStore } from './employees.store';
 import { EmployeeService } from '../services/employee.service';
 import { generateEmployee } from '../../../../tests/test-object-generators';
-import { delay, of } from 'rxjs';
+import { delay, of, throwError } from 'rxjs';
 import { Employee } from '../domain/employee.types';
+import { LoggerService } from '../../../core/errors/services/logger.service';
+import { mockLoggerService } from '../../../../tests/mock-logger-service';
 
 describe('EmployeesStore', () => {
   let store: EmployeesStore;
@@ -19,10 +21,15 @@ describe('EmployeesStore', () => {
       providers: [
         EmployeesStore,
         { provide: EmployeeService, useValue: employeeService },
+        { provide: LoggerService, useValue: mockLoggerService },
       ],
     });
 
     store = TestBed.inject(EmployeesStore);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be created', () => {
@@ -60,6 +67,18 @@ describe('EmployeesStore', () => {
       tick(1);
 
       expect(store.isLoading()).toBe(false);
+    }));
+
+    it('should handle error state correctly', fakeAsync(() => {
+      const error = new Error('Error');
+      employeeService.getEmployees.mockReturnValue(throwError(() => error));
+
+      store.loadEmployees();
+      tick(1);
+
+      expect(store.isError()).toBe(true);
+      expect(store.error()).toBe('Failed to load employees');
+      expect(mockLoggerService.error).toHaveBeenCalledWith(error);
     }));
 
     it('should not load employees if they are already loaded', fakeAsync(() => {
@@ -133,6 +152,18 @@ describe('EmployeesStore', () => {
 
       tick(1);
       expect(store.isLoading()).toBe(false);
+    }));
+
+    it('should handle error state correctly', fakeAsync(() => {
+      const error = new Error('Error');
+      employeeService.getEmployee.mockReturnValue(throwError(() => error));
+
+      store.loadEmployee('employee-1');
+      tick(1);
+
+      expect(store.isError()).toBe(true);
+      expect(store.error()).toBe('Failed to load employee');
+      expect(mockLoggerService.error).toHaveBeenCalledWith(error);
     }));
 
     it('should not load employee if it is already loaded', fakeAsync(() => {

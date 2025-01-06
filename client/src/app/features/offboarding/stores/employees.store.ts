@@ -7,26 +7,35 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { EMPTY } from 'rxjs';
+import { LoggerService } from '../../../core/errors/services/logger.service';
 
 interface EmployeesState {
   employees: Employee[];
   isLoading: boolean;
   isCached: boolean;
+  isError: boolean;
+  error: string;
 }
 
 const initialState: EmployeesState = {
   employees: [],
   isLoading: false,
   isCached: false,
+  isError: false,
+  error: '',
 };
 
 @Injectable()
 export class EmployeesStore {
   #employeeService = inject(EmployeeService);
+  #logger = inject(LoggerService);
+
   #state = signalState(initialState);
 
   readonly employees = this.#state.employees;
   readonly isLoading = this.#state.isLoading;
+  readonly isError = this.#state.isError;
+  readonly error = this.#state.error;
 
   loadEmployees = rxMethod<void>(
     pipe(
@@ -45,8 +54,13 @@ export class EmployeesStore {
                 isCached: true,
               });
             },
-            error: () => {
-              // TODO: handle error
+            error: (error: Error) => {
+              this.#logger.error(error);
+
+              patchState(this.#state, {
+                isError: true,
+                error: 'Failed to load employees',
+              });
             },
             finalize: () => this.#stopLoading(),
           }),
@@ -68,7 +82,8 @@ export class EmployeesStore {
     if (this.#state.isCached()) {
       return;
     }
-    patchState(this.#state, { isLoading: true });
+
+    patchState(this.#state, { isLoading: true, isError: false, error: '' });
   }
 
   #stopLoading() {
@@ -87,8 +102,13 @@ export class EmployeesStore {
           tapResponse({
             next: (employee) =>
               patchState(this.#state, { employees: [employee] }),
-            error: () => {
-              // TODO: handle error
+            error: (error: Error) => {
+              this.#logger.error(error);
+
+              patchState(this.#state, {
+                isError: true,
+                error: 'Failed to load employee',
+              });
             },
             finalize: () => this.#stopLoading(),
           }),

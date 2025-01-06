@@ -24,6 +24,11 @@ export class OffboardingEmployeeDetailPageComponent implements OnInit {
   #employeesStore = inject(EmployeesStore);
 
   id = input.required<string>();
+
+  isLoading = this.#employeesStore.isLoading;
+  isError = this.#employeesStore.isError;
+  error = this.#employeesStore.error;
+
   employee = computed(() =>
     this.#employeesStore.employees().find((e) => e.id === this.id()),
   );

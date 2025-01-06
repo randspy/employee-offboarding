@@ -18,12 +18,22 @@ describe('OffboardingDashboardPageComponent', () => {
   let fixture: ComponentFixture<OffboardingDashboardPageComponent>;
   let loader: HarnessLoader;
   let employees: WritableSignal<Employee[]>;
+  let isLoading: WritableSignal<boolean>;
+  let isError: WritableSignal<boolean>;
+  let error: WritableSignal<string>;
   let mockEmployeesStore: jest.Mocked<EmployeesStore>;
 
   beforeEach(async () => {
     employees = signal([]);
+    isLoading = signal(false);
+    isError = signal(false);
+    error = signal('');
+
     mockEmployeesStore = {
       employees,
+      isLoading,
+      isError,
+      error,
       loadEmployees: jest.fn(),
     } as unknown as jest.Mocked<EmployeesStore>;
 
@@ -54,6 +64,36 @@ describe('OffboardingDashboardPageComponent', () => {
 
   it('should call loadEmployee on init', () => {
     expect(mockEmployeesStore.loadEmployees).toHaveBeenCalled();
+  });
+
+  it('should display loading state', () => {
+    isLoading.set(true);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Loading...');
+    expect(fixture.nativeElement.textContent).not.toContain('Error: Error');
+    expect(employeeList()).toBeNull();
+  });
+
+  it('should display error state', () => {
+    isError.set(true);
+    error.set('Error');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Error: Error');
+    expect(fixture.nativeElement.textContent).not.toContain('Loading...');
+    expect(employeeList()).toBeNull();
+  });
+
+  it('should display employees', () => {
+    employees.set([generateEmployee({ id: 'employee-1' })]);
+    fixture.detectChanges();
+
+    expect(employeeList().componentInstance.employees()).toEqual([
+      generateEmployee({ id: 'employee-1' }),
+    ]);
+    expect(fixture.nativeElement.textContent).not.toContain('Loading...');
+    expect(fixture.nativeElement.textContent).not.toContain('Error: Error');
   });
 
   describe('filtering', () => {

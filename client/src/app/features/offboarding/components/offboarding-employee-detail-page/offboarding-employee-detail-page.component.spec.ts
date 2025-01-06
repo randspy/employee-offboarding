@@ -11,13 +11,22 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
   let component: OffboardingEmployeeDetailPageComponent;
   let fixture: ComponentFixture<OffboardingEmployeeDetailPageComponent>;
   let employees: WritableSignal<Employee[]>;
+  let isLoading: WritableSignal<boolean>;
+  let isError: WritableSignal<boolean>;
+  let error: WritableSignal<string>;
   let mockEmployeesStore: jest.Mocked<EmployeesStore>;
 
   beforeEach(async () => {
     employees = signal([]);
+    isLoading = signal(false);
+    isError = signal(false);
+    error = signal('');
 
     mockEmployeesStore = {
       employees,
+      isLoading,
+      isError,
+      error,
       loadEmployee: jest.fn(),
     } as unknown as jest.Mocked<EmployeesStore>;
 
@@ -52,6 +61,25 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
     ).toBe('employee-1');
   });
 
+  it('should display loading state', () => {
+    isLoading.set(true);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Loading...');
+    expect(fixture.nativeElement.textContent).not.toContain('Error: Error');
+    expect(fixture.nativeElement.textContent).not.toContain('John Doe');
+  });
+
+  it('should display error state', () => {
+    isError.set(true);
+    error.set('Error');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Error: Error');
+    expect(fixture.nativeElement.textContent).not.toContain('Loading...');
+    expect(fixture.nativeElement.textContent).not.toContain('John Doe');
+  });
+
   it('should load employee', () => {
     employees.set([
       generateEmployee({
@@ -80,6 +108,8 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
     expect(page.textContent).toContain('Department 1');
     expect(page.textContent).toContain('Equipment 1');
     expect(page.textContent).toContain('Equipment 2');
+    expect(page.textContent).not.toContain('Loading...');
+    expect(page.textContent).not.toContain('Error: Error');
   });
 
   it('should have a back button', () => {
