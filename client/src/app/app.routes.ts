@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
+import { DefaultRoute } from './core/shared/domain/routes.config';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'app/offboarding',
+    redirectTo: DefaultRoute,
     pathMatch: 'full',
   },
   {
@@ -13,6 +14,7 @@ export const routes: Routes = [
         (m) => m.MainLayoutComponent,
       ),
     children: [
+      { path: '', redirectTo: DefaultRoute, pathMatch: 'full' },
       {
         path: 'offboarding',
         loadChildren: () =>
