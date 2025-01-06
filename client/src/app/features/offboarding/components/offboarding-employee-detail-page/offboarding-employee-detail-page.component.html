@@ -1,1 +1,31 @@
-<p>offboarding-employee-detail-page works!</p>
+<div class="offboarding-employee-detail__container">
+  <div class="offboarding-employee-detail__header">
+    <a [routerLink]="['../']" mat-button>
+      <mat-icon>chevron_left</mat-icon>
+      Back
+    </a>
+  </div>
+
+  @if (employee(); as employee) {
+    <div class="offboarding-employee-detail__employee">
+      <h1>{{ employee.name }}</h1>
+      <button mat-flat-button [disabled]="isAlreadyOffboarded()">
+        Offboard
+      </button>
+    </div>
+    <div class="offboarding-employee-detail__employee-details">
+      <h2>Employee details</h2>
+      <p><strong>Name:</strong> {{ employee.name }}</p>
+      <p><strong>Email:</strong> {{ employee.email }}</p>
+      <p><strong>Department:</strong> {{ employee.department }}</p>
+    </div>
+
+    <div class="offboarding-employee-detail__equipment-details">
+      <h2>Equipment details</h2>
+      <h3>Items to return</h3>
+      @for (equipment of employee.equipments; track equipment.id) {
+        <p>{{ equipment.name }}</p>
+      }
+    </div>
+  }
+</div>
