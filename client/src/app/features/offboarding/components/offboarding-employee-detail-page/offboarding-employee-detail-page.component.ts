@@ -10,6 +10,8 @@ import { EmployeesStore } from '../../stores/employees.store';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { OffboardDialogComponent } from '../offboard-dialog/offboard-dialog.component';
 
 @Component({
   selector: 'eob-offboarding-employee-detail-page',
@@ -32,5 +34,17 @@ export class OffboardingEmployeeDetailPageComponent implements OnInit {
 
   isAlreadyOffboarded() {
     return this.employee()!.status === 'OFFBOARDED';
+  }
+
+  readonly dialog = inject(MatDialog);
+
+  openDialog() {
+    const dialogRef = this.dialog.open(OffboardDialogComponent, {
+      width: '800px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+    });
   }
 }

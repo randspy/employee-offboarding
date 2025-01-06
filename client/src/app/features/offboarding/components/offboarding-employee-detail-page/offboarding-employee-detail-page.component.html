@@ -9,7 +9,11 @@
   @if (employee(); as employee) {
     <div class="offboarding-employee-detail__employee">
       <h1>{{ employee.name }}</h1>
-      <button mat-flat-button [disabled]="isAlreadyOffboarded()">
+      <button
+        mat-flat-button
+        [disabled]="isAlreadyOffboarded()"
+        (click)="openDialog()"
+      >
         Offboard
       </button>
     </div>
