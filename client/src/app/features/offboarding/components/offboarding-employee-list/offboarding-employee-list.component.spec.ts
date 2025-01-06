@@ -2,16 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OffboardingEmployeeListComponent } from './offboarding-employee-list.component';
 import { By } from '@angular/platform-browser';
 
-import { EmployeesStore } from '../../stores/employees.store';
 import { generateEmployee } from '../../../../../tests/test-object-generators';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
-import { Employee } from '../../domain/employee.types';
-import { signal, WritableSignal } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { MatInputHarness } from '@angular/material/input/testing';
 import { MatPaginatorHarness } from '@angular/material/paginator/testing';
 import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 
@@ -19,34 +15,22 @@ describe('OffboardingEmployeeListComponent', () => {
   let component: OffboardingEmployeeListComponent;
   let fixture: ComponentFixture<OffboardingEmployeeListComponent>;
   let loader: HarnessLoader;
-  let employees: WritableSignal<Employee[]>;
 
   beforeEach(async () => {
-    employees = signal([]);
-
     await TestBed.configureTestingModule({
       imports: [OffboardingEmployeeListComponent, NoopAnimationsModule],
-      providers: [
-        {
-          provide: EmployeesStore,
-          useValue: {
-            employees: employees,
-            loadEmployees: jest.fn(),
-          },
-        },
-        provideRouter([]),
-      ],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OffboardingEmployeeListComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('employees', []);
     fixture.detectChanges();
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    employees.set([]);
   });
 
   it('should create', () => {
@@ -54,7 +38,7 @@ describe('OffboardingEmployeeListComponent', () => {
   });
 
   it('should display employee data', () => {
-    employees.set([
+    fixture.componentRef.setInput('employees', [
       generateEmployee({
         id: 'employee-1',
         name: 'John Doe',
@@ -87,7 +71,7 @@ describe('OffboardingEmployeeListComponent', () => {
   });
 
   it('should paginate to the next page', async () => {
-    employees.set([
+    fixture.componentRef.setInput('employees', [
       generateEmployee({ id: 'employee-1', name: 'John Doe' }),
       generateEmployee({ id: 'employee-2', name: 'Jane Doe' }),
       generateEmployee({ id: 'employee-3', name: 'Alice Doe' }),
@@ -113,8 +97,9 @@ describe('OffboardingEmployeeListComponent', () => {
   });
 
   it('should have a link to employee detail page', async () => {
-    const employee = generateEmployee({ id: 'employee-1' });
-    employees.set([employee]);
+    fixture.componentRef.setInput('employees', [
+      generateEmployee({ id: 'employee-1' }),
+    ]);
 
     fixture.detectChanges();
 
@@ -122,50 +107,6 @@ describe('OffboardingEmployeeListComponent', () => {
 
     expect(await link.getLink()).toBe('/employee-1');
     expect(await link.getText()).toBe('View');
-  });
-
-  describe('filtering', () => {
-    it('should filter employees by name', async () => {
-      employees.set([
-        generateEmployee({
-          id: 'employee-1',
-          name: 'John Doe',
-        }),
-        generateEmployee({
-          id: 'employee-2',
-          name: 'Jane Doe',
-        }),
-      ]);
-
-      fixture.detectChanges();
-
-      const filter = await loader.getHarness(MatInputHarness);
-      await filter.setValue('john');
-
-      await fixture.whenStable();
-      fixture.detectChanges();
-
-      expect(numberOfRows()).toBe(1);
-      expect(getNameText(0)).toBe('John Doe');
-    });
-
-    it('should filter employees by department', async () => {
-      employees.set([
-        generateEmployee({ department: 'Engineering' }),
-        generateEmployee({ department: 'Marketing' }),
-      ]);
-
-      fixture.detectChanges();
-
-      const filter = await loader.getHarness(MatInputHarness);
-      await filter.setValue('marketing');
-
-      await fixture.whenStable();
-      fixture.detectChanges();
-
-      expect(numberOfRows()).toBe(1);
-      expect(getDepartmentText(0)).toBe('Marketing');
-    });
   });
 
   const getNameText = (index: number) => getCellText(index, 'name');

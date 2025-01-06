@@ -1,3 +1,10 @@
-<div class="offboarding-dashboard-page-container">
-  <eob-offboarding-employee-list />
+<div class="offboarding-dashboard-page__container">
+  <div class="offboarding-dashboard-page__header">
+    <h1>Offboarding Employees</h1>
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input matInput type="text" [(ngModel)]="filter" placeholder="Filter" />
+    </mat-form-field>
+  </div>
+  <eob-offboarding-employee-list [employees]="filteredEmployees()" />
 </div>

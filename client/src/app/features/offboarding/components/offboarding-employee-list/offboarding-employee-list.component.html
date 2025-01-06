@@ -1,11 +1,3 @@
-<div class="eob-offboarding-employee-list-header">
-  <h1>Offboarding Employees</h1>
-  <mat-form-field>
-    <mat-label>Search</mat-label>
-    <input matInput type="text" [(ngModel)]="filter" placeholder="Filter" />
-  </mat-form-field>
-</div>
-
 <mat-table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>

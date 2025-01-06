@@ -1,4 +1,4 @@
-.offboarding-dashboard-page-container {
+.offboarding-dashboard-page__container {
   margin: 0 auto;
   max-width: var(--content-width);
   padding-block: 2rem;
@@ -6,5 +6,18 @@
 
   eob-offboarding-employee-list {
     width: 100%;
+  }
+}
+
+.offboarding-dashboard-page__header {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 1rem;
+  flex-direction: column;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
   }
 }
