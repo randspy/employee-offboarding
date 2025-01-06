@@ -1,0 +1,10 @@
+.offboarding-dashboard-page-container {
+  margin: 0 auto;
+  max-width: 1024px;
+  padding-block: 2rem;
+  padding-inline: 1rem;
+
+  eob-offboarding-employee-list {
+    width: 100%;
+  }
+}

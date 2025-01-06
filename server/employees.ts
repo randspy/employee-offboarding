@@ -14,6 +14,10 @@ export const employees = [
         id: 'aaa123456',
         name: 'Magic Mouse',
       },
+      {
+        id: 'aaa123458',
+        name: 'Magic keyboard',
+      },
     ],
   },
   {
@@ -69,6 +73,10 @@ export const employees = [
       {
         id: 'ccc123457',
         name: 'Wireless Keyboard',
+      },
+      {
+        id: 'ccc123458',
+        name: 'Wireless Mouse',
       },
     ],
   },

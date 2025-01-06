@@ -1,0 +1,57 @@
+.eob-offboarding-employee-list-header {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 1rem;
+  flex-direction: column;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.mat-mdc-table {
+  .actions-column {
+    flex: 0 0 auto;
+  }
+
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media screen and (max-width: 1280px) {
+    .mat-mdc-header-row {
+      display: none;
+    }
+    .mat-mdc-row {
+      border-bottom: 5px solid var(--neutral-color);
+      display: block;
+    }
+
+    .mat-mdc-cell {
+      border-bottom: 1px solid var(--neutral-color);
+      display: flex;
+      justify-content: space-between;
+      font-size: 1em;
+      text-align: right;
+      font-weight: bold;
+      padding-block: 1.5rem;
+    }
+
+    .mat-mdc-cell:before {
+      content: attr(data-label);
+      float: left;
+      text-transform: uppercase;
+      font-weight: normal;
+      font-size: 0.85em;
+      margin-right: 1rem;
+    }
+
+    .mat-mdc-cell:first-child {
+      padding-left: 1rem;
+    }
+  }
+}

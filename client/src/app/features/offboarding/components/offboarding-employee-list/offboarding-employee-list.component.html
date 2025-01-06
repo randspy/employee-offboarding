@@ -1,0 +1,73 @@
+<div class="eob-offboarding-employee-list-header">
+  <h2>Offboarding Employees</h2>
+  <mat-form-field>
+    <mat-label>Search</mat-label>
+    <input matInput type="text" [(ngModel)]="filter" placeholder="Filter" />
+  </mat-form-field>
+</div>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+    <mat-cell *matCellDef="let row" data-label="name">
+      <span class="truncate">{{ row.name }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+    <mat-cell *matCellDef="let row" data-label="email">
+      <span class="truncate">{{ row.email }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="department">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Department
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row" data-label="department">
+      <span class="truncate">{{ row.department }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="equipment">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Equipment
+    </mat-header-cell>
+    <mat-cell
+      *matCellDef="let row"
+      [style.color]="row.color"
+      data-label="equipment"
+    >
+      <span class="truncate">{{ getEquipmentNames(row.equipments) }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Status
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row" data-label="status">
+      {{ row.status }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="actions-column">
+      Actions
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row" data-label="actions" class="actions-column">
+      <eob-link [link]="row.id"> View </eob-link>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"> </mat-row>
+</mat-table>
+
+<mat-paginator
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  showFirstLastButtons
+  aria-label="Select page of employees"
+></mat-paginator>

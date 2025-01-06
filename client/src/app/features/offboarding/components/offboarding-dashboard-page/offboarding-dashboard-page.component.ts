@@ -1,32 +1,17 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  effect,
-  inject,
-} from '@angular/core';
-import { EmployeesStore } from '../../stores/employees.store';
-
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { OffboardingEmployeeListComponent } from '../offboarding-employee-list/offboarding-employee-list.component';
 @Component({
   selector: 'eob-offboarding-dashboard-page',
-  imports: [],
+  standalone: true,
+  imports: [
+    MatTableModule,
+    MatPaginatorModule,
+    OffboardingEmployeeListComponent,
+  ],
   templateUrl: './offboarding-dashboard-page.component.html',
   styleUrl: './offboarding-dashboard-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OffboardingDashboardPageComponent implements OnInit {
-  #employeesStore = inject(EmployeesStore);
-
-  employees = this.#employeesStore.employees;
-
-  constructor() {
-    // TODO: remove this temporary effect
-    effect(() => {
-      console.log(this.#employeesStore.employees());
-    });
-  }
-
-  ngOnInit() {
-    this.#employeesStore.loadEmployees();
-  }
-}
+export class OffboardingDashboardPageComponent {}
