@@ -139,19 +139,18 @@ describe('EmployeesStore', () => {
       tick(1);
 
       expect(store.employees()).toEqual([employee]);
+      expect(store.isLoading()).toBe(false);
+      expect(store.isError()).toBe(false);
+      expect(store.error()).toBe('');
     }));
 
     it('should handle loading state correctly', fakeAsync(() => {
       const employee = generateEmployee({ id: 'employee-1' });
       mockGetEmployee(employee);
 
-      expect(store.isLoading()).toBe(false);
-
       store.loadEmployee('employee-1');
-      expect(store.isLoading()).toBe(true);
 
-      tick(1);
-      expect(store.isLoading()).toBe(false);
+      expect(store.isLoading()).toBe(true);
     }));
 
     it('should handle error state correctly', fakeAsync(() => {
@@ -179,6 +178,26 @@ describe('EmployeesStore', () => {
 
       expect(store.employees()).toEqual([
         generateEmployee({ id: 'employee-1' }),
+      ]);
+    }));
+  });
+
+  describe('offboardEmployee', () => {
+    it('should offboard employee', fakeAsync(() => {
+      mockGetEmployees([
+        generateEmployee({ id: 'employee-1' }),
+        generateEmployee({ id: 'employee-2' }),
+      ]);
+
+      store.loadEmployees();
+      tick(1);
+
+      store.offboardEmployee('employee-2');
+      tick(1);
+
+      expect(store.employees()).toEqual([
+        generateEmployee({ id: 'employee-1' }),
+        generateEmployee({ id: 'employee-2', status: 'OFFBOARDED' }),
       ]);
     }));
   });

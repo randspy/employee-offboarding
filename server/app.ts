@@ -25,7 +25,7 @@ app.get('/api/employees/:id', async (req, res) => {
 });
 
 app.post('/api/users/:id/offboard', async (req, res) => {
-  await sleep();
+  await sleep(2000);
   const employee = employees.find((e) => e.id === req.params.id);
 
   if (!employee) {
@@ -35,7 +35,7 @@ app.post('/api/users/:id/offboard', async (req, res) => {
 
   res.status(200).send({
     message: 'Offboarding data saved successfully',
-    employee: employee.id,
+    id: employee.id,
   });
 });
 

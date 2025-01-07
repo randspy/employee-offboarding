@@ -29,11 +29,13 @@
         <mat-error>Phone number is required</mat-error>
       }
       @if (hasError("phone", "pattern")) {
-        <mat-error>Please enter a valid Polish phone number</mat-error>
+        <mat-error
+          >Please enter a valid phone number (+48 XXX XXX XXX)</mat-error
+        >
       }
     </mat-form-field>
 
-    <div formGroupName="address">
+    <div formGroupName="address" class="offboard-dialog__address">
       <mat-form-field appearance="outline">
         <mat-label>Receiver</mat-label>
         <input
@@ -87,9 +89,7 @@
             <mat-error>Postal code is required</mat-error>
           }
           @if (hasError("address.postalCode", "pattern")) {
-            <mat-error
-              >Please enter a valid Polish postal code (XX-XXX)</mat-error
-            >
+            <mat-error>Please enter a valid postal code (XX-XXX)</mat-error>
           }
         </mat-form-field>
       </div>
@@ -104,11 +104,19 @@
       ></textarea>
     </mat-form-field>
   </form>
+
+  @if (isError()) {
+    <p>Error: {{ error() }}</p>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button [mat-dialog-close]="form.value" [disabled]="!form.valid">
-    Submit
-  </button>
+  @if (isLoading()) {
+    <button mat-button [disabled]="true">Loading</button>
+  } @else {
+    <button mat-button [disabled]="!form.valid" (click)="onSubmit()">
+      Submit
+    </button>
+  }
 </mat-dialog-actions>

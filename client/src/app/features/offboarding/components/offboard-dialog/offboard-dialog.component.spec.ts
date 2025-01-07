@@ -4,17 +4,38 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatInputHarness } from '@angular/material/input/testing';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatFormFieldHarness } from '@angular/material/form-field/testing';
+import { UsersStore } from '../../stores/users.store';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { mockLoggerService } from '../../../../../tests/mock-logger-service';
+import { LoggerService } from '../../../../core/errors/services/logger.service';
+import { signal, WritableSignal } from '@angular/core';
 
 describe('OffboardDialogComponent', () => {
   let component: OffboardDialogComponent;
   let fixture: ComponentFixture<OffboardDialogComponent>;
   let loader: HarnessLoader;
   let dialogRef: jest.Mocked<MatDialogRef<OffboardDialogComponent>>;
+  let isLoading: WritableSignal<boolean>;
+  let isError: WritableSignal<boolean>;
+  let error: WritableSignal<string>;
+  let mockUsersStore: jest.Mocked<UsersStore>;
 
   beforeEach(async () => {
+    isLoading = signal(false);
+    isError = signal(false);
+    error = signal('');
+
+    mockUsersStore = {
+      isLoading,
+      isError,
+      error,
+      offboardEmployee: jest.fn(),
+    } as unknown as jest.Mocked<UsersStore>;
+
     dialogRef = {
       close: jest.fn(),
     } as Partial<MatDialogRef<OffboardDialogComponent>> as jest.Mocked<
@@ -28,6 +49,20 @@ describe('OffboardDialogComponent', () => {
           provide: MatDialogRef,
           useValue: dialogRef,
         },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: { id: 'test-id' },
+        },
+        {
+          provide: UsersStore,
+          useValue: mockUsersStore,
+        },
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {
+          provide: LoggerService,
+          useValue: mockLoggerService,
+        },
       ],
     }).compileComponents();
 
@@ -35,6 +70,10 @@ describe('OffboardDialogComponent', () => {
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should create', () => {
@@ -63,17 +102,13 @@ describe('OffboardDialogComponent', () => {
     ['email', '', 'Email is required'],
     ['email', 'invalid-email', 'Please enter a valid email address'],
     ['phone', '', 'Phone number is required'],
-    ['phone', '123', 'Please enter a valid Polish phone number'],
+    ['phone', '123', 'Please enter a valid phone number (+48 XXX XXX XXX)'],
     ['address.receiver', '', 'Receiver name is required'],
     ['address.country', '', 'Country is required'],
     ['address.city', '', 'City is required'],
     ['address.streetLine1', '', 'Street address is required'],
     ['address.postalCode', '', 'Postal code is required'],
-    [
-      'address.postalCode',
-      '123',
-      'Please enter a valid Polish postal code (XX-XXX)',
-    ],
+    ['address.postalCode', '123', 'Please enter a valid postal code (XX-XXX)'],
   ])(
     'should show validation error for %s: %s -> %s',
     async (field, value, expectedError) => {
@@ -90,18 +125,32 @@ describe('OffboardDialogComponent', () => {
     );
     await submitButton.click();
 
-    expect(dialogRef.close).toHaveBeenCalledWith({
-      email: 'test@example.com',
-      phone: '+48 123 456 789',
-      address: {
-        receiver: 'John Doe',
-        country: 'Poland',
-        city: 'Warsaw',
-        streetLine1: 'Test Street 1',
-        postalCode: '00-123',
+    expect(mockUsersStore.offboardEmployee).toHaveBeenCalledWith({
+      id: 'test-id',
+      offboarding: {
+        email: 'test@example.com',
+        phone: '+48 123 456 789',
+        address: {
+          receiver: 'John Doe',
+          country: 'Poland',
+          city: 'Warsaw',
+          streetLine1: 'Test Street 1',
+          postalCode: '00-123',
+        },
+        notes: 'Test notes',
       },
-      notes: 'Test notes',
     });
+    expect(dialogRef.close).toHaveBeenCalledWith(true);
+  });
+
+  it('should show error message when offboarding fails', async () => {
+    isError.set(true);
+    error.set('Error message');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Error: Error message');
+    expect(fixture.nativeElement.textContent).not.toContain('Loading');
+    expect(dialogRef.close).not.toHaveBeenCalled();
   });
 
   const fillFormWithValidData = async () => {

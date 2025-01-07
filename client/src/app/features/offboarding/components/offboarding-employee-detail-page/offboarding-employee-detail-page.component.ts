@@ -10,12 +10,12 @@ import { EmployeesStore } from '../../stores/employees.store';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { OffboardDialogComponent } from '../offboard-dialog/offboard-dialog.component';
 
 @Component({
   selector: 'eob-offboarding-employee-detail-page',
-  imports: [RouterLink, MatButtonModule, MatIconModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatDialogModule],
   templateUrl: './offboarding-employee-detail-page.component.html',
   styleUrl: './offboarding-employee-detail-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,10 +46,16 @@ export class OffboardingEmployeeDetailPageComponent implements OnInit {
   openDialog() {
     const dialogRef = this.dialog.open(OffboardDialogComponent, {
       width: '800px',
+      disableClose: true,
+      data: {
+        id: this.id(),
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
+      if (result) {
+        this.#employeesStore.offboardEmployee(this.id());
+      }
     });
   }
 }

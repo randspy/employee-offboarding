@@ -11,3 +11,8 @@ export interface Offboarding {
   phone: string;
   email: string;
 }
+
+export interface OffboardResponse {
+  message: string;
+  id: string;
+}

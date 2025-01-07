@@ -116,4 +116,16 @@ export class EmployeesStore {
       }),
     ),
   );
+
+  offboardEmployee(id: string) {
+    patchState(this.#state, {
+      employees: this.#state
+        .employees()
+        .map((employee) =>
+          employee.id === id
+            ? { ...employee, status: 'OFFBOARDED' as const }
+            : employee,
+        ),
+    });
+  }
 }
