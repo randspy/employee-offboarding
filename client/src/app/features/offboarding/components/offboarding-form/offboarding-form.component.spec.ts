@@ -32,12 +32,12 @@ describe('OffboardingFormComponent', () => {
     ['email', 'invalid-email', 'Please enter a valid email address'],
     ['phone', '', 'Phone number is required'],
     ['phone', '123', 'Please enter a valid phone number (+48 XXX XXX XXX)'],
-    ['address.receiver', '', 'Receiver name is required'],
-    ['address.country', '', 'Country is required'],
-    ['address.city', '', 'City is required'],
-    ['address.streetLine1', '', 'Street address is required'],
-    ['address.postalCode', '', 'Postal code is required'],
-    ['address.postalCode', '123', 'Please enter a valid postal code (XX-XXX)'],
+    ['receiver', '', 'Receiver name is required'],
+    ['country', '', 'Country is required'],
+    ['city', '', 'City is required'],
+    ['streetLine1', '', 'Street address is required'],
+    ['postalCode', '', 'Postal code is required'],
+    ['postalCode', '123', 'Please enter a valid postal code (XX-XXX)'],
   ])(
     'should show validation error for %s: %s -> %s',
     async (field, value, expectedError) => {
@@ -54,14 +54,7 @@ describe('OffboardingFormComponent', () => {
       const inputEl = await input.host();
       const controlName = await inputEl.getAttribute('formcontrolname');
 
-      if (fieldPath.includes('.')) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const [_, control] = fieldPath.split('.');
-        if (controlName === control) {
-          const errors = await formField.getTextErrors();
-          return errors[0] ?? '';
-        }
-      } else if (controlName === fieldPath) {
+      if (controlName === fieldPath) {
         const errors = await formField.getTextErrors();
         return errors[0] ?? '';
       }
@@ -73,9 +66,7 @@ describe('OffboardingFormComponent', () => {
   const setInputValue = async (fieldPath: string, value: string) => {
     const input = await loader.getHarness(
       MatInputHarness.with({
-        selector: fieldPath.includes('.')
-          ? `[formGroupName="address"] [formControlName="${fieldPath.split('.')[1]}"]`
-          : `[formControlName="${fieldPath}"]`,
+        selector: `[formControlName="${fieldPath}"]`,
       }),
     );
     await input.setValue(value);

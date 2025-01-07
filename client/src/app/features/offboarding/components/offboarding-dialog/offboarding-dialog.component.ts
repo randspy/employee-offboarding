@@ -61,9 +61,22 @@ export class OffboardingDialogComponent {
   }
 
   onSubmit() {
+    const offboarding: Offboarding = {
+      address: {
+        receiver: this.offboardingForm().form.value.receiver!,
+        country: this.offboardingForm().form.value.country!,
+        city: this.offboardingForm().form.value.city!,
+        streetLine1: this.offboardingForm().form.value.streetLine1!,
+        postalCode: this.offboardingForm().form.value.postalCode!,
+      },
+      email: this.offboardingForm().form.value.email!,
+      phone: this.offboardingForm().form.value.phone!,
+      notes: this.offboardingForm().form.value.notes!,
+    };
+
     this.#usersStore.offboardEmployee({
       id: this.#data.id,
-      offboarding: this.offboardingForm().form.value as Offboarding,
+      offboarding,
     });
 
     this.#hasSubmitted.set(true);

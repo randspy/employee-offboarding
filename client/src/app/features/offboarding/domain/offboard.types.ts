@@ -1,6 +1,7 @@
 export interface Address {
   streetLine1: string;
   country: string;
+  city: string;
   postalCode: string;
   receiver: string;
 }

@@ -25,7 +25,6 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class OffboardingFormComponent {
   #formBuilder = inject(FormBuilder);
-
   #phoneValidatorForPoland = new RegExp(/^(?:\+48|48)?(?:[ -]?\d{3}){3}$/);
   #postalCodeValidatorForPoland = new RegExp(/^\d{2}-\d{3}$/);
 
@@ -35,19 +34,17 @@ export class OffboardingFormComponent {
       '',
       [Validators.required, Validators.pattern(this.#phoneValidatorForPoland)],
     ],
-    address: this.#formBuilder.group({
-      receiver: ['', [Validators.required]],
-      country: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      streetLine1: ['', [Validators.required]],
-      postalCode: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(this.#postalCodeValidatorForPoland),
-        ],
+    receiver: ['', [Validators.required]],
+    country: ['', [Validators.required]],
+    city: ['', [Validators.required]],
+    streetLine1: ['', [Validators.required]],
+    postalCode: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(this.#postalCodeValidatorForPoland),
       ],
-    }),
+    ],
     notes: [''],
   });
 

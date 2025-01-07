@@ -22,6 +22,7 @@ export function generateOffboarding(
       country: 'test-country',
       postalCode: 'test-postal-code',
       receiver: 'test-receiver',
+      city: 'test-city',
     },
     notes: 'test-notes',
     phone: 'test-phone',

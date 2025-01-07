@@ -137,11 +137,11 @@ describe('OffboardingDialogComponent', () => {
     const inputs = {
       email: 'test@example.com',
       phone: '+48 123 456 789',
-      'address.receiver': 'John Doe',
-      'address.country': 'Poland',
-      'address.city': 'Warsaw',
-      'address.streetLine1': 'Test Street 1',
-      'address.postalCode': '00-123',
+      receiver: 'John Doe',
+      country: 'Poland',
+      city: 'Warsaw',
+      streetLine1: 'Test Street 1',
+      postalCode: '00-123',
       notes: 'Test notes',
     };
 
@@ -153,9 +153,7 @@ describe('OffboardingDialogComponent', () => {
   const setInputValue = async (fieldPath: string, value: string) => {
     const input = await loader.getHarness(
       MatInputHarness.with({
-        selector: fieldPath.includes('.')
-          ? `[formGroupName="address"] [formControlName="${fieldPath.split('.')[1]}"]`
-          : `[formControlName="${fieldPath}"]`,
+        selector: `[formControlName="${fieldPath}"]`,
       }),
     );
     await input.setValue(value);
