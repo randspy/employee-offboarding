@@ -9,7 +9,6 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
 import { provideRouter } from '@angular/router';
 import { MatPaginatorHarness } from '@angular/material/paginator/testing';
-import { LinkComponentHarness } from '../../../../../tests/harness/ui/link.harness';
 
 describe('OffboardingEmployeeListComponent', () => {
   let component: OffboardingEmployeeListComponent;
@@ -103,10 +102,13 @@ describe('OffboardingEmployeeListComponent', () => {
 
     fixture.detectChanges();
 
-    const link = await loader.getHarness(LinkComponentHarness);
+    const viewLink = fixture.debugElement.query(By.css('a'));
 
-    expect(await link.getLink()).toBe('/employee-1');
-    expect(await link.getText()).toBe('View');
+    expect(viewLink.nativeElement.textContent).toContain('View');
+    expect(
+      viewLink.nativeElement.attributes.getNamedItem('ng-reflect-router-link')
+        .value,
+    ).toContain('employee-1');
   });
 
   const getNameText = (index: number) => getCellText(index, 'name');

@@ -49,7 +49,7 @@
       Actions
     </mat-header-cell>
     <mat-cell *matCellDef="let row" data-label="actions" class="actions-column">
-      <eob-link [link]="row.id"> View </eob-link>
+      <a [routerLink]="row.id" mat-flat-button> View </a>
     </mat-cell>
   </ng-container>
 

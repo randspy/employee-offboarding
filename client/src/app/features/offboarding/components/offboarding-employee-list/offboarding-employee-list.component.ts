@@ -11,21 +11,22 @@ import { Employee, Equipment } from '../../domain/employee.types';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
-import { LinkComponent } from '../../../../ui/components/link/link.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-
+import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'eob-offboarding-employee-list',
   imports: [
     MatTableModule,
     MatPaginatorModule,
     MatIconModule,
-    LinkComponent,
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
+    RouterLink,
+    MatButtonModule,
   ],
   templateUrl: './offboarding-employee-list.component.html',
   styleUrl: './offboarding-employee-list.component.scss',
