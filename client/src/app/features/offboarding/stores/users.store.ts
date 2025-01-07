@@ -6,6 +6,7 @@ import { exhaustMap, pipe, tap } from 'rxjs';
 import { Offboarding } from '../domain/offboard.types';
 import { UserService } from '../services/user.service';
 import { LoggerService } from '../../../core/errors/services/logger.service';
+import { EmployeesStore } from './employees.store';
 
 interface UsersState {
   isLoading: boolean;
@@ -21,6 +22,7 @@ const initialState: UsersState = {
 
 @Injectable()
 export class UsersStore {
+  #employeesStore = inject(EmployeesStore);
   #state = signalState(initialState);
   #userService = inject(UserService);
   #logger = inject(LoggerService);
@@ -35,7 +37,10 @@ export class UsersStore {
       exhaustMap(({ id, offboarding }) =>
         this.#userService.offboardEmployee(id, offboarding).pipe(
           tapResponse({
-            next: () => patchState(this.#state, { isLoading: false }),
+            next: () => {
+              patchState(this.#state, { isLoading: false });
+              this.#employeesStore.offboardEmployee(id);
+            },
             error: (error: Error) => {
               this.#logger.error(error);
 

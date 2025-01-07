@@ -6,6 +6,7 @@ import { signal, WritableSignal } from '@angular/core';
 import { Employee } from '../../domain/employee.types';
 import { generateEmployee } from '../../../../../tests/test-object-generators';
 import { By } from '@angular/platform-browser';
+import { OffboardDialogComponent } from '../offboard-dialog/offboard-dialog.component';
 
 describe('OffboardingEmployeeDetailPageComponent', () => {
   let component: OffboardingEmployeeDetailPageComponent;
@@ -141,6 +142,26 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
 
       const button = fixture.debugElement.query(By.css('button'));
       expect(button.nativeElement.disabled).toBe(true);
+    });
+
+    it('should open the offboard dialog', () => {
+      // there is css compilation for the dialog, we don't care about it
+      jest.spyOn(console, 'error').mockImplementation();
+      const spy = jest.spyOn(component.dialog, 'open');
+      employees.set([generateEmployee({ id: 'employee-1', status: 'ACTIVE' })]);
+
+      fixture.detectChanges();
+
+      const button = fixture.debugElement.query(By.css('button'));
+      button.nativeElement.click();
+
+      expect(spy).toHaveBeenCalledWith(OffboardDialogComponent, {
+        width: '800px',
+        disableClose: true,
+        data: {
+          id: 'employee-1',
+        },
+      });
     });
   });
 });

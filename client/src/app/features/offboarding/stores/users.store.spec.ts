@@ -8,12 +8,18 @@ import { of, throwError } from 'rxjs';
 import { OffboardResponse } from '../domain/offboard.types';
 import { delay } from 'rxjs';
 import { generateOffboarding } from '../../../../tests/test-object-generators';
+import { EmployeesStore } from './employees.store';
 
 describe('UsersStore', () => {
   let service: UsersStore;
   let userService: jest.Mocked<UserService>;
+  let employeesStore: jest.Mocked<EmployeesStore>;
 
   beforeEach(() => {
+    employeesStore = {
+      offboardEmployee: jest.fn(),
+    } as Partial<jest.Mocked<EmployeesStore>> as jest.Mocked<EmployeesStore>;
+
     userService = {
       offboardEmployee: jest.fn(),
     } as Partial<jest.Mocked<UserService>> as jest.Mocked<UserService>;
@@ -28,6 +34,10 @@ describe('UsersStore', () => {
         {
           provide: LoggerService,
           useValue: mockLoggerService,
+        },
+        {
+          provide: EmployeesStore,
+          useValue: employeesStore,
         },
       ],
     });
@@ -87,6 +97,21 @@ describe('UsersStore', () => {
       });
 
       expect(service.isLoading()).toBe(true);
+    }));
+
+    it('should update the employees store with the offboarded status', fakeAsync(() => {
+      mockOffboardEmployee({
+        id: 'test-id',
+        message: 'test-message',
+      });
+
+      service.offboardEmployee({
+        id: 'test-id',
+        offboarding: generateOffboarding({ email: 'test-email' }),
+      });
+      tick(1);
+
+      expect(employeesStore.offboardEmployee).toHaveBeenCalledWith('test-id');
     }));
   });
 

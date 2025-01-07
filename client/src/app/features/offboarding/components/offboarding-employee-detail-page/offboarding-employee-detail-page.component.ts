@@ -44,18 +44,12 @@ export class OffboardingEmployeeDetailPageComponent implements OnInit {
   readonly dialog = inject(MatDialog);
 
   openDialog() {
-    const dialogRef = this.dialog.open(OffboardDialogComponent, {
+    this.dialog.open(OffboardDialogComponent, {
       width: '800px',
       disableClose: true,
       data: {
         id: this.id(),
       },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.#employeesStore.offboardEmployee(this.id());
-      }
     });
   }
 }
