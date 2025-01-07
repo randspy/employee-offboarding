@@ -41,6 +41,20 @@
   gap: 0.5rem;
 }
 
+.offboarding-employee-detail__equipment-details {
+  h3 {
+    background-color: var(--neutral-color);
+    padding: 0.5rem;
+  }
+
+  p {
+    padding: 0.5rem;
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--neutral-color);
+    }
+  }
+}
+
 h2::after {
   content: "";
   display: block;
