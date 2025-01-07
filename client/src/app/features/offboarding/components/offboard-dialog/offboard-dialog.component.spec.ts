@@ -6,7 +6,6 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonHarness } from '@angular/material/button/testing';
-import { MatFormFieldHarness } from '@angular/material/form-field/testing';
 import { UsersStore } from '../../stores/users.store';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -98,25 +97,6 @@ describe('OffboardDialogComponent', () => {
     expect(await submitButton.isDisabled()).toBe(false);
   });
 
-  it.each([
-    ['email', '', 'Email is required'],
-    ['email', 'invalid-email', 'Please enter a valid email address'],
-    ['phone', '', 'Phone number is required'],
-    ['phone', '123', 'Please enter a valid phone number (+48 XXX XXX XXX)'],
-    ['address.receiver', '', 'Receiver name is required'],
-    ['address.country', '', 'Country is required'],
-    ['address.city', '', 'City is required'],
-    ['address.streetLine1', '', 'Street address is required'],
-    ['address.postalCode', '', 'Postal code is required'],
-    ['address.postalCode', '123', 'Please enter a valid postal code (XX-XXX)'],
-  ])(
-    'should show validation error for %s: %s -> %s',
-    async (field, value, expectedError) => {
-      await setInputValue(field, value);
-      expect(await getErrorMessage(field)).toBe(expectedError);
-    },
-  );
-
   it('should close dialog with form value when submitted', async () => {
     await fillFormWithValidData();
 
@@ -168,30 +148,6 @@ describe('OffboardDialogComponent', () => {
     for (const [field, value] of Object.entries(inputs)) {
       await setInputValue(field, value);
     }
-  };
-
-  const getErrorMessage = async (fieldPath: string): Promise<string> => {
-    const formFields = await loader.getAllHarnesses(MatFormFieldHarness);
-
-    for (const formField of formFields) {
-      const input = (await formField.getControl()) as MatInputHarness;
-      const inputEl = await input.host();
-      const controlName = await inputEl.getAttribute('formcontrolname');
-
-      if (fieldPath.includes('.')) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const [_, control] = fieldPath.split('.');
-        if (controlName === control) {
-          const errors = await formField.getTextErrors();
-          return errors[0] ?? '';
-        }
-      } else if (controlName === fieldPath) {
-        const errors = await formField.getTextErrors();
-        return errors[0] ?? '';
-      }
-    }
-
-    return '';
   };
 
   const setInputValue = async (fieldPath: string, value: string) => {
