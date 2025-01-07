@@ -6,7 +6,7 @@ import { signal, WritableSignal } from '@angular/core';
 import { Employee } from '../../domain/employee.types';
 import { generateEmployee } from '../../../../../tests/test-object-generators';
 import { By } from '@angular/platform-browser';
-import { OffboardDialogComponent } from '../offboard-dialog/offboard-dialog.component';
+import { OffboardingDialogComponent } from '../offboarding-dialog/offboarding-dialog.component';
 
 describe('OffboardingEmployeeDetailPageComponent', () => {
   let component: OffboardingEmployeeDetailPageComponent;
@@ -155,7 +155,7 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
       const button = fixture.debugElement.query(By.css('button'));
       button.nativeElement.click();
 
-      expect(spy).toHaveBeenCalledWith(OffboardDialogComponent, {
+      expect(spy).toHaveBeenCalledWith(OffboardingDialogComponent, {
         width: '800px',
         disableClose: true,
         data: {

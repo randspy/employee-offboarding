@@ -29,12 +29,12 @@ import { OffboardingFormComponent } from '../offboarding-form/offboarding-form.c
     ReactiveFormsModule,
     OffboardingFormComponent,
   ],
-  templateUrl: './offboard-dialog.component.html',
-  styleUrl: './offboard-dialog.component.scss',
+  templateUrl: './offboarding-dialog.component.html',
+  styleUrl: './offboarding-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OffboardDialogComponent {
-  #dialogRef = inject(MatDialogRef<OffboardDialogComponent>);
+export class OffboardingDialogComponent {
+  #dialogRef = inject(MatDialogRef<OffboardingDialogComponent>);
   #data = inject(MAT_DIALOG_DATA) as { id: string };
   #usersStore = inject(UsersStore);
 

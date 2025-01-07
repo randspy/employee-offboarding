@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { OffboardDialogComponent } from './offboard-dialog.component';
+import { OffboardingDialogComponent } from './offboarding-dialog.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
@@ -13,11 +13,11 @@ import { mockLoggerService } from '../../../../../tests/mock-logger-service';
 import { LoggerService } from '../../../../core/errors/services/logger.service';
 import { signal, WritableSignal } from '@angular/core';
 
-describe('OffboardDialogComponent', () => {
-  let component: OffboardDialogComponent;
-  let fixture: ComponentFixture<OffboardDialogComponent>;
+describe('OffboardingDialogComponent', () => {
+  let component: OffboardingDialogComponent;
+  let fixture: ComponentFixture<OffboardingDialogComponent>;
   let loader: HarnessLoader;
-  let dialogRef: jest.Mocked<MatDialogRef<OffboardDialogComponent>>;
+  let dialogRef: jest.Mocked<MatDialogRef<OffboardingDialogComponent>>;
   let isLoading: WritableSignal<boolean>;
   let isError: WritableSignal<boolean>;
   let error: WritableSignal<string>;
@@ -37,12 +37,12 @@ describe('OffboardDialogComponent', () => {
 
     dialogRef = {
       close: jest.fn(),
-    } as Partial<MatDialogRef<OffboardDialogComponent>> as jest.Mocked<
-      MatDialogRef<OffboardDialogComponent>
+    } as Partial<MatDialogRef<OffboardingDialogComponent>> as jest.Mocked<
+      MatDialogRef<OffboardingDialogComponent>
     >;
 
     await TestBed.configureTestingModule({
-      imports: [OffboardDialogComponent, NoopAnimationsModule],
+      imports: [OffboardingDialogComponent, NoopAnimationsModule],
       providers: [
         {
           provide: MatDialogRef,
@@ -65,7 +65,7 @@ describe('OffboardDialogComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(OffboardDialogComponent);
+    fixture = TestBed.createComponent(OffboardingDialogComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
     fixture.detectChanges();

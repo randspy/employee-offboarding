@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { OffboardDialogComponent } from '../offboard-dialog/offboard-dialog.component';
+import { OffboardingDialogComponent } from '../offboarding-dialog/offboarding-dialog.component';
 
 @Component({
   selector: 'eob-offboarding-employee-detail-page',
@@ -44,7 +44,7 @@ export class OffboardingEmployeeDetailPageComponent implements OnInit {
   readonly dialog = inject(MatDialog);
 
   openDialog() {
-    this.dialog.open(OffboardDialogComponent, {
+    this.dialog.open(OffboardingDialogComponent, {
       width: '800px',
       disableClose: true,
       data: {
