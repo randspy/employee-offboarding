@@ -13,7 +13,7 @@ export interface Offboarding {
   email: string;
 }
 
-export interface OffboardResponse {
+export interface OffboardingApiResponse {
   message: string;
   id: string;
 }

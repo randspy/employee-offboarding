@@ -5,7 +5,7 @@ import { UserService } from '../services/user.service';
 import { LoggerService } from '../../../core/errors/services/logger.service';
 import { mockLoggerService } from '../../../../tests/mock-logger-service';
 import { of, throwError } from 'rxjs';
-import { OffboardResponse } from '../domain/offboard.types';
+import { OffboardingApiResponse } from '../domain/offboard.types';
 import { delay } from 'rxjs';
 import { generateOffboarding } from '../../../../tests/test-object-generators';
 import { EmployeesStore } from './employees.store';
@@ -115,9 +115,11 @@ describe('UsersStore', () => {
     }));
   });
 
-  const mockOffboardEmployee = (offboardResponse: OffboardResponse) => {
+  const mockOffboardEmployee = (
+    offboardingApiResponse: OffboardingApiResponse,
+  ) => {
     userService.offboardEmployee.mockReturnValue(
-      of(offboardResponse).pipe(delay(1)),
+      of(offboardingApiResponse).pipe(delay(1)),
     );
   };
 });
