@@ -48,16 +48,20 @@ export class OffboardingDialogComponent {
   readonly isError = this.#usersStore.isError;
   readonly error = this.#usersStore.error;
 
-  #hasSubmitted = signal(false);
+  hasSubmitted = signal(false);
 
   constructor() {
     effect(() => {
       if (
-        this.#hasSubmitted() &&
+        this.hasSubmitted() &&
         !this.#usersStore.isLoading() &&
         !this.#usersStore.isError()
       ) {
         this.#dialogRef.close(true);
+      }
+
+      if (this.#usersStore.isError()) {
+        this.hasSubmitted.set(false);
       }
     });
   }
@@ -76,6 +80,7 @@ export class OffboardingDialogComponent {
       notes: this.offboardingForm().form.value.notes!,
     };
 
+    this.hasSubmitted.set(true);
     this.#usersStore.offboardEmployee(
       {
         id: this.#data.id,
@@ -85,7 +90,5 @@ export class OffboardingDialogComponent {
         injector: this.#injector,
       },
     );
-
-    this.#hasSubmitted.set(true);
   }
 }

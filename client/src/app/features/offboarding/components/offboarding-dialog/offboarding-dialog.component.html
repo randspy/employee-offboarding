@@ -10,7 +10,9 @@
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
   @if (isLoading()) {
-    <button mat-button [disabled]="true">Loading</button>
+    <button mat-button [disabled]="true">Saving</button>
+  } @else if (hasSubmitted()) {
+    <button mat-button [disabled]="true">Saved</button>
   } @else {
     <button
       mat-button

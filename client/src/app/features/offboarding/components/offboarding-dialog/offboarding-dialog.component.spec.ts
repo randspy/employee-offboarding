@@ -126,7 +126,7 @@ describe('OffboardingDialogComponent', () => {
     expect(dialogRef.close).toHaveBeenCalledWith(true);
   });
 
-  it('should show error message when offboarding fails', async () => {
+  it('should show error message when offboarding failed', async () => {
     isError.set(true);
     error.set('Error message');
     fixture.detectChanges();
@@ -134,6 +134,45 @@ describe('OffboardingDialogComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('Error: Error message');
     expect(fixture.nativeElement.textContent).not.toContain('Loading');
     expect(dialogRef.close).not.toHaveBeenCalled();
+  });
+
+  it('should show submit button when offboarding is failed', async () => {
+    isError.set(true);
+    await fillFormWithValidData();
+
+    const submitButton = await loader.getHarness(
+      MatButtonHarness.with({ text: 'Submit' }),
+    );
+
+    await submitButton.click();
+
+    expect(await submitButton.isDisabled()).toBe(false);
+  });
+
+  it('should show saving button when offboarding is in progress', async () => {
+    isLoading.set(true);
+    fixture.detectChanges();
+
+    const submitButton = await loader.getHarness(
+      MatButtonHarness.with({ text: 'Saving' }),
+    );
+
+    expect(await submitButton.isDisabled()).toBe(true);
+  });
+
+  it('should show saved button when offboarding is successful', async () => {
+    await fillFormWithValidData();
+
+    const submitButton = await loader.getHarness(
+      MatButtonHarness.with({ text: 'Submit' }),
+    );
+    await submitButton.click();
+
+    const savedButton = await loader.getHarness(
+      MatButtonHarness.with({ text: 'Saved' }),
+    );
+
+    expect(await savedButton.isDisabled()).toBe(true);
   });
 
   const fillFormWithValidData = async () => {

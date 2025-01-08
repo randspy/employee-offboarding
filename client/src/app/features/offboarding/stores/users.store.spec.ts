@@ -113,6 +113,31 @@ describe('UsersStore', () => {
 
       expect(employeesStore.offboardEmployee).toHaveBeenCalledWith('test-id');
     }));
+
+    it('should clear error when offboarding is successful', fakeAsync(() => {
+      const error = new Error('Error');
+      userService.offboardEmployee.mockReturnValue(throwError(() => error));
+
+      service.offboardEmployee({
+        id: 'test-id',
+        offboarding: generateOffboarding({ email: 'test-email' }),
+      });
+      tick(1);
+
+      mockOffboardEmployee({
+        id: 'test-id',
+        message: 'test-message',
+      });
+
+      service.offboardEmployee({
+        id: 'test-id',
+        offboarding: generateOffboarding({ email: 'test-email' }),
+      });
+      tick(1);
+
+      expect(service.isError()).toBe(false);
+      expect(service.error()).toBe('');
+    }));
   });
 
   const mockOffboardEmployee = (

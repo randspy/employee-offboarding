@@ -33,7 +33,13 @@ export class UsersStore {
 
   offboardEmployee = rxMethod<{ id: string; offboarding: Offboarding }>(
     pipe(
-      tap(() => patchState(this.#state, { isLoading: true })),
+      tap(() =>
+        patchState(this.#state, {
+          isLoading: true,
+          isError: false,
+          error: '',
+        }),
+      ),
       exhaustMap(({ id, offboarding }) =>
         this.#userService.offboardEmployee(id, offboarding).pipe(
           tapResponse({
