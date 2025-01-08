@@ -56,9 +56,8 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
 
   it('should call loadEmployee on init', () => {
     expect(
-      (
-        mockEmployeesStore.loadEmployee as unknown as jest.Mock
-      ).mock.calls[0][0](),
+      (mockEmployeesStore.loadEmployee as unknown as jest.Mock).mock
+        .calls[0][0],
     ).toBe('employee-1');
   });
 

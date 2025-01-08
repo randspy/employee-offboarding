@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  Injector,
   OnInit,
 } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,6 +32,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class OffboardingDashboardPageComponent implements OnInit {
   #employeesStore = inject(EmployeesStore);
+  #injector = inject(Injector);
 
   isLoading = this.#employeesStore.isLoading;
   isError = this.#employeesStore.isError;
@@ -51,7 +53,9 @@ export class OffboardingDashboardPageComponent implements OnInit {
   );
 
   ngOnInit() {
-    this.#employeesStore.loadEmployees();
+    this.#employeesStore.loadEmployees(signal(null), {
+      injector: this.#injector,
+    });
   }
 
   #filterEmployees(employees: Employee[], filter: string) {

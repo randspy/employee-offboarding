@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  Injector,
   input,
   OnInit,
 } from '@angular/core';
@@ -22,6 +23,7 @@ import { OffboardingDialogComponent } from '../offboarding-dialog/offboarding-di
 })
 export class OffboardingEmployeeDetailPageComponent implements OnInit {
   #employeesStore = inject(EmployeesStore);
+  #injector = inject(Injector);
 
   id = input.required<string>();
 
@@ -34,7 +36,9 @@ export class OffboardingEmployeeDetailPageComponent implements OnInit {
   );
 
   ngOnInit() {
-    this.#employeesStore.loadEmployee(this.id);
+    this.#employeesStore.loadEmployee(this.id(), {
+      injector: this.#injector,
+    });
   }
 
   isAlreadyOffboarded() {
