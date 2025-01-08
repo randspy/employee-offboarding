@@ -3,6 +3,7 @@ import {
   Component,
   effect,
   inject,
+  Injector,
   signal,
   viewChild,
 } from '@angular/core';
@@ -34,6 +35,7 @@ import { OffboardingFormComponent } from '../offboarding-form/offboarding-form.c
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OffboardingDialogComponent {
+  #injector = inject(Injector);
   #dialogRef = inject(MatDialogRef<OffboardingDialogComponent>);
   #data = inject(MAT_DIALOG_DATA) as { id: string };
   #usersStore = inject(UsersStore);
@@ -74,10 +76,15 @@ export class OffboardingDialogComponent {
       notes: this.offboardingForm().form.value.notes!,
     };
 
-    this.#usersStore.offboardEmployee({
-      id: this.#data.id,
-      offboarding,
-    });
+    this.#usersStore.offboardEmployee(
+      {
+        id: this.#data.id,
+        offboarding,
+      },
+      {
+        injector: this.#injector,
+      },
+    );
 
     this.#hasSubmitted.set(true);
   }

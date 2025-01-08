@@ -105,21 +105,24 @@ describe('OffboardingDialogComponent', () => {
     );
     await submitButton.click();
 
-    expect(mockUsersStore.offboardEmployee).toHaveBeenCalledWith({
-      id: 'test-id',
-      offboarding: {
-        email: 'test@example.com',
-        phone: '+48 123 456 789',
-        address: {
-          receiver: 'John Doe',
-          country: 'Poland',
-          city: 'Warsaw',
-          streetLine1: 'Test Street 1',
-          postalCode: '00-123',
+    expect(mockUsersStore.offboardEmployee).toHaveBeenCalledWith(
+      {
+        id: 'test-id',
+        offboarding: {
+          email: 'test@example.com',
+          phone: '+48 123 456 789',
+          address: {
+            receiver: 'John Doe',
+            country: 'Poland',
+            city: 'Warsaw',
+            streetLine1: 'Test Street 1',
+            postalCode: '00-123',
+          },
+          notes: 'Test notes',
         },
-        notes: 'Test notes',
       },
-    });
+      expect.anything(),
+    );
     expect(dialogRef.close).toHaveBeenCalledWith(true);
   });
 
