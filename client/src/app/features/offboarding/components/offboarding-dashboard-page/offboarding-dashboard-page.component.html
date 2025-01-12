@@ -11,6 +11,8 @@
     <p>Loading...</p>
   } @else if (isError()) {
     <p>Error: {{ error() }}</p>
+  } @else if (filteredEmployees().length === 0) {
+    <p class="offboarding-dashboard-page__no-employees">No employees found</p>
   } @else {
     <eob-offboarding-employee-list [employees]="filteredEmployees()" />
   }

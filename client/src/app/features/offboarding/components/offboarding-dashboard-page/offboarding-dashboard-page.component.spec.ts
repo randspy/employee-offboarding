@@ -85,6 +85,13 @@ describe('OffboardingDashboardPageComponent', () => {
     expect(employeeList()).toBeNull();
   });
 
+  it('should display no employees found message', () => {
+    employees.set([]);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('No employees found');
+  });
+
   it('should display employees', () => {
     employees.set([generateEmployee({ id: 'employee-1' })]);
     fixture.detectChanges();
