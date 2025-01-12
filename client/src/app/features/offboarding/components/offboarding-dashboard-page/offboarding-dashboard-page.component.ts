@@ -15,6 +15,7 @@ import { Employee } from '../../domain/employee.types';
 import { EmployeesStore } from '../../stores/employees.store';
 import { FormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoaderComponent } from '../../../../ui/components/loader/loader.component';
 
 @Component({
   selector: 'eob-offboarding-dashboard-page',
@@ -25,6 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FormsModule,
     MatProgressSpinnerModule,
     OffboardingEmployeeListComponent,
+    LoaderComponent,
   ],
   templateUrl: './offboarding-dashboard-page.component.html',
   styleUrl: './offboarding-dashboard-page.component.scss',

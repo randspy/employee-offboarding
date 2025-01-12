@@ -12,6 +12,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { mockLoggerService } from '../../../../../tests/mock-logger-service';
 import { LoggerService } from '../../../../core/errors/services/logger.service';
 import { signal, WritableSignal } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { LoaderComponent } from '../../../../ui/components/loader/loader.component';
 
 describe('OffboardingDialogComponent', () => {
   let component: OffboardingDialogComponent;
@@ -149,15 +151,14 @@ describe('OffboardingDialogComponent', () => {
     expect(await submitButton.isDisabled()).toBe(false);
   });
 
-  it('should show saving button when offboarding is in progress', async () => {
+  it('should show loading button when offboarding is in progress', async () => {
     isLoading.set(true);
     fixture.detectChanges();
 
-    const submitButton = await loader.getHarness(
-      MatButtonHarness.with({ text: 'Saving' }),
+    const loaderComponent = fixture.debugElement.query(
+      By.directive(LoaderComponent),
     );
-
-    expect(await submitButton.isDisabled()).toBe(true);
+    expect(loaderComponent).toBeTruthy();
   });
 
   it('should show saved button when offboarding is successful', async () => {

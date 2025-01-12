@@ -12,6 +12,7 @@ import { generateEmployee } from '../../../../../tests/test-object-generators';
 import { By } from '@angular/platform-browser';
 import { OffboardingEmployeeListComponent } from '../offboarding-employee-list/offboarding-employee-list.component';
 import { provideRouter } from '@angular/router';
+import { LoaderComponent } from '../../../../ui/components/loader/loader.component';
 
 describe('OffboardingDashboardPageComponent', () => {
   let component: OffboardingDashboardPageComponent;
@@ -70,7 +71,7 @@ describe('OffboardingDashboardPageComponent', () => {
     isLoading.set(true);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('Loading...');
+    expect(loaderComponent()).toBeTruthy();
     expect(fixture.nativeElement.textContent).not.toContain('Error: Error');
     expect(employeeList()).toBeNull();
   });
@@ -81,7 +82,7 @@ describe('OffboardingDashboardPageComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Error: Error');
-    expect(fixture.nativeElement.textContent).not.toContain('Loading...');
+    expect(loaderComponent()).toBeNull();
     expect(employeeList()).toBeNull();
   });
 
@@ -99,7 +100,7 @@ describe('OffboardingDashboardPageComponent', () => {
     expect(employeeList().componentInstance.employees()).toEqual([
       generateEmployee({ id: 'employee-1' }),
     ]);
-    expect(fixture.nativeElement.textContent).not.toContain('Loading...');
+    expect(loaderComponent()).toBeNull();
     expect(fixture.nativeElement.textContent).not.toContain('Error: Error');
   });
 
@@ -154,4 +155,7 @@ describe('OffboardingDashboardPageComponent', () => {
 
   const employeeList = () =>
     fixture.debugElement.query(By.directive(OffboardingEmployeeListComponent));
+
+  const loaderComponent = () =>
+    fixture.debugElement.query(By.directive(LoaderComponent));
 });

@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Offboarding } from '../../domain/offboard.types';
 import { UsersStore } from '../../stores/users.store';
 import { OffboardingFormComponent } from '../offboarding-form/offboarding-form.component';
+import { LoaderComponent } from '../../../../ui/components/loader/loader.component';
 
 @Component({
   selector: 'eob-offboard-dialog',
@@ -29,6 +30,7 @@ import { OffboardingFormComponent } from '../offboarding-form/offboarding-form.c
     MatButtonModule,
     ReactiveFormsModule,
     OffboardingFormComponent,
+    LoaderComponent,
   ],
   templateUrl: './offboarding-dialog.component.html',
   styleUrl: './offboarding-dialog.component.scss',

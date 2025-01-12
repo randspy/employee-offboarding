@@ -8,7 +8,7 @@
   </div>
 
   @if (isLoading()) {
-    <p>Loading...</p>
+    <eob-loader [size]="'large'" class="offboarding-dashboard-page__loading" />
   } @else if (isError()) {
     <p>Error: {{ error() }}</p>
   } @else if (filteredEmployees().length === 0) {
