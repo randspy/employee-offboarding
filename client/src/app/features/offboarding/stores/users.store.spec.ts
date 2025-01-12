@@ -2,13 +2,13 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { UsersStore } from './users.store';
 import { UserService } from '../services/user.service';
-import { LoggerService } from '../../../core/errors/services/logger.service';
-import { mockLoggerService } from '../../../../tests/mock-logger-service';
 import { of, throwError } from 'rxjs';
 import { OffboardingApiResponse } from '../domain/offboard.types';
 import { delay } from 'rxjs';
 import { generateOffboarding } from '../../../../tests/test-object-generators';
 import { EmployeesStore } from './employees.store';
+import { NotificationService } from '../../../core/shared/services/notification.service';
+import { mockNotificationService } from '../../../../tests/mock-notification-service';
 
 describe('UsersStore', () => {
   let service: UsersStore;
@@ -31,10 +31,7 @@ describe('UsersStore', () => {
           provide: UserService,
           useValue: userService,
         },
-        {
-          provide: LoggerService,
-          useValue: mockLoggerService,
-        },
+        { provide: NotificationService, useValue: mockNotificationService },
         {
           provide: EmployeesStore,
           useValue: employeesStore,
@@ -82,7 +79,10 @@ describe('UsersStore', () => {
 
       expect(service.isError()).toBe(true);
       expect(service.error()).toBe('Failed to offboard employee');
-      expect(mockLoggerService.error).toHaveBeenCalledWith(error);
+      expect(mockNotificationService.showError).toHaveBeenCalledWith(
+        error,
+        'Failed to offboard employee',
+      );
     }));
 
     it('should handle loading state', fakeAsync(() => {

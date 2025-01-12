@@ -4,8 +4,8 @@ import { EmployeeService } from '../services/employee.service';
 import { generateEmployee } from '../../../../tests/test-object-generators';
 import { delay, of, throwError } from 'rxjs';
 import { Employee } from '../domain/employee.types';
-import { LoggerService } from '../../../core/errors/services/logger.service';
-import { mockLoggerService } from '../../../../tests/mock-logger-service';
+import { NotificationService } from '../../../core/shared/services/notification.service';
+import { mockNotificationService } from '../../../../tests/mock-notification-service';
 
 describe('EmployeesStore', () => {
   let store: EmployeesStore;
@@ -21,7 +21,7 @@ describe('EmployeesStore', () => {
       providers: [
         EmployeesStore,
         { provide: EmployeeService, useValue: employeeService },
-        { provide: LoggerService, useValue: mockLoggerService },
+        { provide: NotificationService, useValue: mockNotificationService },
       ],
     });
 
@@ -78,7 +78,10 @@ describe('EmployeesStore', () => {
 
       expect(store.isError()).toBe(true);
       expect(store.error()).toBe('Failed to load employees');
-      expect(mockLoggerService.error).toHaveBeenCalledWith(error);
+      expect(mockNotificationService.showError).toHaveBeenCalledWith(
+        error,
+        'Failed to load employees',
+      );
     }));
 
     it('should not load employees if they are already loaded', fakeAsync(() => {
@@ -162,7 +165,10 @@ describe('EmployeesStore', () => {
 
       expect(store.isError()).toBe(true);
       expect(store.error()).toBe('Failed to load employee');
-      expect(mockLoggerService.error).toHaveBeenCalledWith(error);
+      expect(mockNotificationService.showError).toHaveBeenCalledWith(
+        error,
+        'Failed to load employee',
+      );
     }));
 
     it('should not load employee if it is already loaded', fakeAsync(() => {

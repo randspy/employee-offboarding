@@ -6,39 +6,39 @@
     </a>
   </div>
 
-  @if (isLoading()) {
+  @if (employee(); as employee) {
+    <div class="offboarding-employee-detail__employee">
+      <h1>{{ employee.name }}</h1>
+      <button
+        mat-flat-button
+        [disabled]="isAlreadyOffboarded()"
+        (click)="openDialog()"
+      >
+        Offboard
+      </button>
+    </div>
+    <div class="offboarding-employee-detail__employee-details">
+      <h2>Employee details</h2>
+      <p><strong>Name:</strong> {{ employee.name }}</p>
+      <p><strong>Email:</strong> {{ employee.email }}</p>
+      <p><strong>Department:</strong> {{ employee.department }}</p>
+    </div>
+
+    <div class="offboarding-employee-detail__equipment-details">
+      <h2>Equipment details</h2>
+      <h3>Items to return</h3>
+      @for (equipment of employee.equipments; track equipment.id) {
+        <p>{{ equipment.name }}</p>
+      }
+    </div>
+  } @else if (isLoading()) {
     <eob-loader
       size="large"
       class="offboarding-employee-detail-page__loading"
     />
-  } @else if (isError()) {
-    <p>Error: {{ error() }}</p>
   } @else {
-    @if (employee(); as employee) {
-      <div class="offboarding-employee-detail__employee">
-        <h1>{{ employee.name }}</h1>
-        <button
-          mat-flat-button
-          [disabled]="isAlreadyOffboarded()"
-          (click)="openDialog()"
-        >
-          Offboard
-        </button>
-      </div>
-      <div class="offboarding-employee-detail__employee-details">
-        <h2>Employee details</h2>
-        <p><strong>Name:</strong> {{ employee.name }}</p>
-        <p><strong>Email:</strong> {{ employee.email }}</p>
-        <p><strong>Department:</strong> {{ employee.department }}</p>
-      </div>
-
-      <div class="offboarding-employee-detail__equipment-details">
-        <h2>Equipment details</h2>
-        <h3>Items to return</h3>
-        @for (equipment of employee.equipments; track equipment.id) {
-          <p>{{ equipment.name }}</p>
-        }
-      </div>
-    }
+    <p class="offboarding-employee-detail-page__no-employee">
+      No employee found
+    </p>
   }
 </div>

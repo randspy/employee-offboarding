@@ -37,8 +37,6 @@ export class OffboardingDashboardPageComponent implements OnInit {
   #injector = inject(Injector);
 
   isLoading = this.#employeesStore.isLoading;
-  isError = this.#employeesStore.isError;
-  error = this.#employeesStore.error;
 
   filter = signal('');
 

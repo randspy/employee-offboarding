@@ -14,21 +14,15 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
   let fixture: ComponentFixture<OffboardingEmployeeDetailPageComponent>;
   let employees: WritableSignal<Employee[]>;
   let isLoading: WritableSignal<boolean>;
-  let isError: WritableSignal<boolean>;
-  let error: WritableSignal<string>;
   let mockEmployeesStore: jest.Mocked<EmployeesStore>;
 
   beforeEach(async () => {
     employees = signal([]);
     isLoading = signal(false);
-    isError = signal(false);
-    error = signal('');
 
     mockEmployeesStore = {
       employees,
       isLoading,
-      isError,
-      error,
       loadEmployee: jest.fn(),
     } as unknown as jest.Mocked<EmployeesStore>;
 
@@ -67,17 +61,6 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
     fixture.detectChanges();
 
     expect(loaderComponent()).toBeTruthy();
-    expect(fixture.nativeElement.textContent).not.toContain('Error: Error');
-    expect(fixture.nativeElement.textContent).not.toContain('John Doe');
-  });
-
-  it('should display error state', () => {
-    isError.set(true);
-    error.set('Error');
-    fixture.detectChanges();
-
-    expect(fixture.nativeElement.textContent).toContain('Error: Error');
-    expect(loaderComponent()).toBeFalsy();
     expect(fixture.nativeElement.textContent).not.toContain('John Doe');
   });
 
@@ -110,7 +93,6 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
     expect(page.textContent).toContain('Equipment 1');
     expect(page.textContent).toContain('Equipment 2');
     expect(loaderComponent()).toBeFalsy();
-    expect(page.textContent).not.toContain('Error: Error');
   });
 
   it('should have a back button', () => {

@@ -5,8 +5,8 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, tap } from 'rxjs';
 import { Offboarding } from '../domain/offboard.types';
 import { UserService } from '../services/user.service';
-import { LoggerService } from '../../../core/errors/services/logger.service';
 import { EmployeesStore } from './employees.store';
+import { NotificationService } from '../../../core/shared/services/notification.service';
 
 interface UsersState {
   isLoading: boolean;
@@ -25,7 +25,7 @@ export class UsersStore {
   #employeesStore = inject(EmployeesStore);
   #state = signalState(initialState);
   #userService = inject(UserService);
-  #logger = inject(LoggerService);
+  #notificationService = inject(NotificationService);
 
   readonly isLoading = this.#state.isLoading;
   readonly isError = this.#state.isError;
@@ -48,12 +48,16 @@ export class UsersStore {
               this.#employeesStore.offboardEmployee(id);
             },
             error: (error: Error) => {
-              this.#logger.error(error);
+              const failedToOffboardMessage = 'Failed to offboard employee';
+              this.#notificationService.showError(
+                error,
+                failedToOffboardMessage,
+              );
 
               patchState(this.#state, {
                 isError: true,
                 isLoading: false,
-                error: 'Failed to offboard employee',
+                error: failedToOffboardMessage,
               });
             },
           }),

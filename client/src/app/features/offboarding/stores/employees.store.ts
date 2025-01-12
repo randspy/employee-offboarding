@@ -7,7 +7,8 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { EMPTY } from 'rxjs';
-import { LoggerService } from '../../../core/errors/services/logger.service';
+
+import { NotificationService } from '../../../core/shared/services/notification.service';
 
 interface EmployeesState {
   employees: Employee[];
@@ -28,7 +29,7 @@ const initialState: EmployeesState = {
 @Injectable()
 export class EmployeesStore {
   #employeeService = inject(EmployeeService);
-  #logger = inject(LoggerService);
+  #notificationService = inject(NotificationService);
 
   #state = signalState(initialState);
 
@@ -55,11 +56,16 @@ export class EmployeesStore {
               });
             },
             error: (error: Error) => {
-              this.#logger.error(error);
+              const failedToLoadEmployeesMessage = 'Failed to load employees';
+
+              this.#notificationService.showError(
+                error,
+                failedToLoadEmployeesMessage,
+              );
 
               patchState(this.#state, {
                 isError: true,
-                error: 'Failed to load employees',
+                error: failedToLoadEmployeesMessage,
               });
             },
             finalize: () => this.#stopLoading(),
@@ -103,11 +109,16 @@ export class EmployeesStore {
             next: (employee) =>
               patchState(this.#state, { employees: [employee] }),
             error: (error: Error) => {
-              this.#logger.error(error);
+              const failedToLoadEmployeeMessage = 'Failed to load employee';
+
+              this.#notificationService.showError(
+                error,
+                failedToLoadEmployeeMessage,
+              );
 
               patchState(this.#state, {
                 isError: true,
-                error: 'Failed to load employee',
+                error: failedToLoadEmployeeMessage,
               });
             },
             finalize: () => this.#stopLoading(),

@@ -128,16 +128,6 @@ describe('OffboardingDialogComponent', () => {
     expect(dialogRef.close).toHaveBeenCalledWith(true);
   });
 
-  it('should show error message when offboarding failed', async () => {
-    isError.set(true);
-    error.set('Error message');
-    fixture.detectChanges();
-
-    expect(fixture.nativeElement.textContent).toContain('Error: Error message');
-    expect(fixture.nativeElement.textContent).not.toContain('Loading');
-    expect(dialogRef.close).not.toHaveBeenCalled();
-  });
-
   it('should show submit button when offboarding is failed', async () => {
     isError.set(true);
     await fillFormWithValidData();
