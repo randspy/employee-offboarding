@@ -13,10 +13,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { OffboardingDialogComponent } from '../offboarding-dialog/offboarding-dialog.component';
+import { LoaderComponent } from '../../../../ui/components/loader/loader.component';
 
 @Component({
   selector: 'eob-offboarding-employee-detail-page',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatDialogModule],
+  imports: [
+    RouterLink,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    LoaderComponent,
+  ],
   templateUrl: './offboarding-employee-detail-page.component.html',
   styleUrl: './offboarding-employee-detail-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

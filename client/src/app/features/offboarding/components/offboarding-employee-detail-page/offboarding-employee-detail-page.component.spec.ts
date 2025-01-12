@@ -7,6 +7,7 @@ import { Employee } from '../../domain/employee.types';
 import { generateEmployee } from '../../../../../tests/test-object-generators';
 import { By } from '@angular/platform-browser';
 import { OffboardingDialogComponent } from '../offboarding-dialog/offboarding-dialog.component';
+import { LoaderComponent } from '../../../../ui/components/loader/loader.component';
 
 describe('OffboardingEmployeeDetailPageComponent', () => {
   let component: OffboardingEmployeeDetailPageComponent;
@@ -65,7 +66,7 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
     isLoading.set(true);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('Loading...');
+    expect(loaderComponent()).toBeTruthy();
     expect(fixture.nativeElement.textContent).not.toContain('Error: Error');
     expect(fixture.nativeElement.textContent).not.toContain('John Doe');
   });
@@ -76,7 +77,7 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Error: Error');
-    expect(fixture.nativeElement.textContent).not.toContain('Loading...');
+    expect(loaderComponent()).toBeFalsy();
     expect(fixture.nativeElement.textContent).not.toContain('John Doe');
   });
 
@@ -108,7 +109,7 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
     expect(page.textContent).toContain('Department 1');
     expect(page.textContent).toContain('Equipment 1');
     expect(page.textContent).toContain('Equipment 2');
-    expect(page.textContent).not.toContain('Loading...');
+    expect(loaderComponent()).toBeFalsy();
     expect(page.textContent).not.toContain('Error: Error');
   });
 
@@ -163,4 +164,7 @@ describe('OffboardingEmployeeDetailPageComponent', () => {
       });
     });
   });
+
+  const loaderComponent = () =>
+    fixture.debugElement.query(By.directive(LoaderComponent));
 });
