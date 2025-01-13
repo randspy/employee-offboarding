@@ -3,6 +3,7 @@ const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
 const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
+const testingLibrary = require("eslint-plugin-testing-library");
 
 module.exports = tseslint.config(
   {
@@ -14,6 +15,7 @@ module.exports = tseslint.config(
       ...angular.configs.tsRecommended,
       eslintPluginPrettierRecommended,
     ],
+    ...testingLibrary.configs["flat/angular"],
     processor: angular.processInlineTemplates,
     rules: {
       "@angular-eslint/directive-selector": [
