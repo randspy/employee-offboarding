@@ -1,7 +1,9 @@
-<div class="loader__container">
+<div class="flex justify-center items-center p-4">
   <div
-    class="loader__spinner"
-    [class.loader__spinner--small]="size() === 'small'"
-    [class.loader__spinner--large]="size() === 'large'"
+    class="border-4 border-neutral rounded-full animate-spin w-10 h-10 border-t-primary"
+    [ngClass]="{
+      'w-5 h-5 border-2': size() === 'small',
+      'w-16 h-16 border-8': size() === 'large',
+    }"
   ></div>
 </div>

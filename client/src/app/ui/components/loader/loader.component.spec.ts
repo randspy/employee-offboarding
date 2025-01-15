@@ -25,16 +25,16 @@ describe('LoaderComponent', () => {
     fixture.componentRef.setInput('size', 'small');
     fixture.detectChanges();
 
-    const loader = fixture.debugElement.query(By.css('.loader__spinner'));
+    const loader = fixture.debugElement.query(By.css('.w-5'));
 
-    expect(loader.nativeElement.classList).toContain('loader__spinner--small');
+    expect(loader.nativeElement.classList).toContain('w-5');
   });
 
   it('should show a large loader', () => {
     fixture.componentRef.setInput('size', 'large');
     fixture.detectChanges();
 
-    const loader = fixture.debugElement.query(By.css('.loader__spinner'));
-    expect(loader.nativeElement.classList).toContain('loader__spinner--large');
+    const loader = fixture.debugElement.query(By.css('.w-16'));
+    expect(loader.nativeElement.classList).toContain('w-16');
   });
 });
