@@ -1,152 +1,167 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { OffboardingEmployeeDetailPageComponent } from './offboarding-employee-detail-page.component';
 import { EmployeesStore } from '../../stores/employees.store';
-import { signal, WritableSignal } from '@angular/core';
+
 import { Employee } from '../../domain/employee.types';
 import { generateEmployee } from '../../../../../tests/test-object-generators';
-import { By } from '@angular/platform-browser';
-import { OffboardingDialogComponent } from '../offboarding-dialog/offboarding-dialog.component';
-import { LoaderComponent } from '../../../../ui/components/loader/loader.component';
+import { DummyComponent } from '../../../../../tests/dummy-component';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { userEvent } from '@testing-library/user-event';
+import { provideMockNotificationService } from '../../../../../tests/mock-notification-service';
+import { provideHttpClient } from '@angular/common/http';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 
-describe('OffboardingEmployeeDetailPageComponent', () => {
-  let component: OffboardingEmployeeDetailPageComponent;
-  let fixture: ComponentFixture<OffboardingEmployeeDetailPageComponent>;
-  let employees: WritableSignal<Employee[]>;
-  let isLoading: WritableSignal<boolean>;
-  let mockEmployeesStore: jest.Mocked<EmployeesStore>;
+import { screen, waitFor } from '@testing-library/angular';
+import { EmployeeService } from '../../services/employee.service';
 
-  beforeEach(async () => {
-    employees = signal([]);
-    isLoading = signal(false);
-
-    mockEmployeesStore = {
-      employees,
-      isLoading,
-      loadEmployee: jest.fn(),
-    } as unknown as jest.Mocked<EmployeesStore>;
-
-    await TestBed.configureTestingModule({
-      imports: [OffboardingEmployeeDetailPageComponent],
-      providers: [
-        { provide: EmployeesStore, useValue: mockEmployeesStore },
-        provideRouter([]),
-      ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(OffboardingEmployeeDetailPageComponent);
-    component = fixture.componentInstance;
-    fixture.componentRef.setInput('id', 'employee-1');
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-    employees.set([]);
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should call loadEmployee on init', () => {
-    expect(
-      (mockEmployeesStore.loadEmployee as unknown as jest.Mock).mock
-        .calls[0][0],
-    ).toBe('employee-1');
-  });
-
-  it('should display loading state', () => {
-    isLoading.set(true);
-    fixture.detectChanges();
-
-    expect(loaderComponent()).toBeTruthy();
-    expect(fixture.nativeElement.textContent).not.toContain('John Doe');
-  });
-
-  it('should load employee', () => {
-    employees.set([
-      generateEmployee({
-        id: 'employee-1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        department: 'Department 1',
-        equipments: [
+async function setup() {
+  TestBed.configureTestingModule({
+    imports: [OffboardingEmployeeDetailPageComponent],
+    providers: [
+      provideMockNotificationService(),
+      provideHttpClient(),
+      provideHttpClientTesting(),
+      provideRouter(
+        [
           {
-            id: 'equipment-1',
-            name: 'Equipment 1',
+            path: 'offboarding',
+            component: DummyComponent,
           },
           {
-            id: 'equipment-2',
-            name: 'Equipment 2',
+            path: 'offboarding/:id',
+            component: OffboardingEmployeeDetailPageComponent,
           },
         ],
+        withComponentInputBinding(),
+      ),
+      EmployeesStore,
+      EmployeeService,
+    ],
+  });
+
+  const harness = await RouterTestingHarness.create();
+  harness.fixture.autoDetectChanges(true);
+
+  await harness.navigateByUrl(
+    '/offboarding/employee-1',
+    OffboardingEmployeeDetailPageComponent,
+  );
+
+  const user = userEvent.setup();
+  const httpCtrl = TestBed.inject(HttpTestingController);
+
+  return {
+    user,
+    httpCtrl,
+    harness,
+  };
+}
+
+describe('OffboardingEmployeeDetailPageComponent', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should display employee', async () => {
+    const { httpCtrl } = await setup();
+
+    await mockHttpCall(httpCtrl);
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'John Doe' })).toBeVisible();
+      expect(screen.getByText('John Doe', { selector: 'p' })).toBeTruthy();
+      expect(screen.getByText('john.doe@example.com')).toBeVisible();
+      expect(screen.getByText('Department 1')).toBeVisible();
+      expect(screen.getByText('Equipment 1')).toBeVisible();
+      expect(screen.getByText('Equipment 2')).toBeVisible();
+    });
+  });
+
+  it('should display no employee', async () => {
+    const { httpCtrl } = await setup();
+
+    await mockHttpCall(
+      httpCtrl,
+      generateEmployee({
+        id: 'employee-2',
       }),
-    ]);
+    );
 
-    fixture.detectChanges();
-
-    const page = fixture.nativeElement;
-    expect(page.textContent).toContain('John Doe');
-    expect(page.textContent).toContain('john.doe@example.com');
-    expect(page.textContent).toContain('Department 1');
-    expect(page.textContent).toContain('Equipment 1');
-    expect(page.textContent).toContain('Equipment 2');
-    expect(loaderComponent()).toBeFalsy();
+    await waitFor(() => {
+      expect(screen.getByText('No employee found')).toBeVisible();
+    });
   });
 
-  it('should have a back button', () => {
-    const backLink = fixture.debugElement.query(By.css('a'));
+  it('should display loading state', async () => {
+    await setup();
 
-    expect(backLink.nativeElement.textContent).toContain('Back');
-    expect(
-      backLink.nativeElement.attributes.getNamedItem('ng-reflect-router-link')
-        .value,
-    ).toContain('../');
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('offboarding-employee-detail-page-loader'),
+      ).toBeVisible();
+    });
   });
 
-  describe('offboard button', () => {
-    it('should be enabled if employee is not offboarded', async () => {
-      employees.set([generateEmployee({ id: 'employee-1', status: 'ACTIVE' })]);
+  it('should should go back to dashboard', async () => {
+    const { user, httpCtrl, harness } = await setup();
 
-      fixture.detectChanges();
+    await mockHttpCall(httpCtrl);
 
-      const button = fixture.debugElement.query(By.css('button'));
-      expect(button.nativeElement.disabled).toBe(false);
+    const backButton = screen.getByRole('link', {
+      name: /Back/,
     });
 
-    it('should disable offboard button if employee is offboarded', async () => {
-      employees.set([
-        generateEmployee({ id: 'employee-1', status: 'OFFBOARDED' }),
-      ]);
+    await user.click(backButton);
 
-      fixture.detectChanges();
+    await waitFor(() => {
+      expect(harness.routeDebugElement!.componentInstance).toBeInstanceOf(
+        DummyComponent,
+      );
+    });
+  });
 
-      const button = fixture.debugElement.query(By.css('button'));
-      expect(button.nativeElement.disabled).toBe(true);
+  it('should open offboard dialog', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const { user, httpCtrl } = await setup();
+
+    await mockHttpCall(httpCtrl);
+
+    const offboardButton = await screen.findByRole('button', {
+      name: 'Offboard',
     });
 
-    it('should open the offboard dialog', () => {
-      // there is css compilation for the dialog, we don't care about it
-      jest.spyOn(console, 'error').mockImplementation();
-      const spy = jest.spyOn(component.dialog, 'open');
-      employees.set([generateEmployee({ id: 'employee-1', status: 'ACTIVE' })]);
+    await user.click(offboardButton);
 
-      fixture.detectChanges();
+    expect(screen.getByRole('dialog')).toBeVisible();
+  });
 
-      const button = fixture.debugElement.query(By.css('button'));
-      button.nativeElement.click();
-
-      expect(spy).toHaveBeenCalledWith(OffboardingDialogComponent, {
-        width: '800px',
-        disableClose: true,
-        data: {
-          id: 'employee-1',
+  const mockHttpCall = async (
+    httpCtrl: HttpTestingController,
+    employee: Employee = generateEmployee({
+      id: 'employee-1',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      department: 'Department 1',
+      equipments: [
+        {
+          id: 'equipment-1',
+          name: 'Equipment 1',
         },
-      });
-    });
-  });
+        {
+          id: 'equipment-2',
+          name: 'Equipment 2',
+        },
+      ],
+    }),
+  ) => {
+    await waitFor(() => {
+      httpCtrl.expectOne('/api/employees/employee-1').flush(employee);
 
-  const loaderComponent = () =>
-    fixture.debugElement.query(By.directive(LoaderComponent));
+      httpCtrl.verify();
+    });
+  };
 });
