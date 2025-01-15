@@ -3,6 +3,10 @@
 @use "./assets/variables.scss";
 @use "ngx-toastr/toastr";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body,
 eob-root {
